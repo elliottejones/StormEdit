@@ -1,8 +1,8 @@
-#StormEdit
-A Lua script editor for Stormworks: Build and Rescue
+# StormEdit
+-A Lua script editor for Stormworks: Build and Rescue
 
 
-#What is this?
+# What is this?
 
 I find tuning and programming Lua scripts in Stormworks way too annoying. To edit a script, you must click through three different menus that all take time to load.
 
@@ -13,7 +13,7 @@ This will be done though linking a Lua block to this app, and a reference to it 
 Using an external code editor carries many other benefits to customisation and efficiency, which can be added at a later date.
 
 
-#What is this built with?
+# What is this built with?
 
 StormEdit's GUI is built with AvaloniaUI with it's MVVM (Model-View-Viewmodel) design pattern.
 
