@@ -13,6 +13,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\MinifyLogic.lua" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\MinifyLogic.lua">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.11" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.11" />
@@ -25,5 +35,6 @@
     </PackageReference>
     <PackageReference Include="AvaloniaEdit.TextMate" Version="11.3.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="NLua" Version="1.7.8" />
   </ItemGroup>
 </Project>
