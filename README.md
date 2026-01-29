@@ -15,7 +15,7 @@ Using an external code editor carries many other benefits to customisation and e
 
 # What is this built with?
 
-StormEdit's GUI is built with AvaloniaUI with it's MVVM (Model-View-Viewmodel) design pattern.
+StormEdit's GUI is built with C# and AvaloniaUI with it's MVVM (Model-View-Viewmodel) design pattern.
 
 The built in code editor is AvalonEdit with the TextMate Lua syntax highlighting.
 
