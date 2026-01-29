@@ -1,0 +1,168 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:StormEdit.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
+        x:Class="StormEdit.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="StormEdit"
+        xmlns:ae="clr-namespace:AvaloniaEdit;assembly=Avalonia.AvaloniaEdit"
+        xmlns:avaloniaedit="https://github.com/avaloniaui/avaloniaedit">
+
+<Window.Styles>
+	
+    <Style Selector="Slider:horizontal /template/ Thumb">
+    <Setter Property="Width" Value="10" />
+    <Setter Property="Height" Value="10" />
+</Style>
+
+</Window.Styles>
+    
+    <Grid>
+		<DockPanel>
+        <Border DockPanel.Dock="Top" Background="#2d2d2d" Padding="10,5" BorderBrush="#3e3e3e" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <TextBlock Text="STORMEDIT" 
+                           VerticalAlignment="Center" 
+                           FontWeight="Bold" 
+                           Foreground="#9cdcfe"
+                           Margin="0,0,-15,0"/>
+
+                <TextBlock Text="v1.0.0" 
+                           VerticalAlignment="Bottom" 
+                           FontSize="10" 
+                           Foreground="#FFFFFF"
+                           Margin="0,0,1,0"/>
+
+                <Menu Background="Transparent">
+                    <MenuItem Header="File" Foreground="White">
+                        <MenuItem Header="Open File..."/>
+                        <MenuItem Header="Save All"/>
+                        <Separator/>
+                        <MenuItem Header="Exit"/>
+                    </MenuItem>
+                    <MenuItem Header="Config" Foreground="White">
+                        <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"/>
+                        <MenuItem Header="Themes"/>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+        </Border>
+
+        <Border DockPanel.Dock="Bottom" Background="#007acc" Height="30">
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBlock Grid.Column="0" Text="Ready" 
+                           Foreground="White" FontSize="12" 
+                           VerticalAlignment="Center" Margin="10,0"/>
+                
+                <Button Grid.Column="1" Content="Update" 
+                        Background="#28a745" Foreground="White"
+                        FontSize="11" FontWeight="Bold"
+                        Padding="15,0" Height="30"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0" CornerRadius="0"/>
+            </Grid>
+        </Border>
+
+        <Grid ColumnDefinitions="250, 4, *">
+            <Border Grid.Column="0" Background="#252526" BorderBrush="#3e3e3e" BorderThickness="0,0,1,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="EXPLORER" 
+                               Foreground="#bbbbbb" FontSize="11" 
+                               FontWeight="Bold" Margin="10,10,0,5"/>
+                    <ListBox Background="Transparent" BorderThickness="0">
+                        </ListBox>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Width="4" Background="#1e1e1e" ResizeDirection="Columns"/>
+
+            <Grid Grid.Column="2" RowDefinitions="Auto,*">
+
+                <StackPanel Orientation="Horizontal" Background="#2d2d2d" Height="30">
+                    <TextBlock Text="{Binding FontSize, StringFormat='{}Size: {0}'}" 
+                               VerticalAlignment="Center" 
+                               Foreground="White" 
+                               Margin="10,0,0,0"/>
+                    
+                    <Slider Minimum="12" Maximum="96" 
+                            TickFrequency="2" 
+                            Width="200" 
+                            Margin="10,-10,10,0"
+                            IsSnapToTickEnabled="True"
+                            VerticalAlignment="Center"
+
+                            Value="{Binding FontSize}"/>
+                    
+                    </StackPanel>
+
+          
+				<avaloniaedit:TextEditor
+                Grid.Row="1"
+               Name="Editor"
+               Margin="0"
+               Background="#1e1e1e"
+               Foreground="#d4d4d4"
+               HorizontalScrollBarVisibility="Auto"
+               VerticalScrollBarVisibility="Visible"
+               WordWrap="True"
+               VerticalAlignment="Stretch"
+               ShowLineNumbers="True"
+               FontFamily="Cascadia Code,Consolas,Monospace"
+               FontSize="{Binding FontSize}"/>
+            </Grid>
+            
+        </Grid>
+
+    </DockPanel>
+
+        <Border Background="#80000000" 
+        HorizontalAlignment="Stretch" 
+        VerticalAlignment="Stretch"
+        IsVisible="{Binding IsSettingsOpen}">
+
+            <Grid ColumnDefinitions="2*, 6*, 2*">
+				
+
+                <Border Grid.Column="1"
+                    Background="#2d2d2d" 
+                    
+                    CornerRadius="5"
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Center">
+
+                <StackPanel Spacing="2">
+					<TextBlock Text="Settings" Foreground="White" HorizontalAlignment="Center" Margin="20" FontWeight="SemiBold"  FontSize="32"/>
+                    
+                    <Grid ColumnDefinitions="Auto, *">
+                        <TextBlock Grid.Column="0" Text="Stormworks Saves Path:" Margin ="15,0" Foreground="White" VerticalAlignment="Center"/>
+                        <TextBox  Grid.Column="1" Watermark="Enter Path" Margin="15, 0" HorizontalAlignment="Stretch" />
+                    </Grid>
+                        
+                   <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                       <Button Content="Save And Exit" HorizontalAlignment="Right" Margin="15, 15" Command="{Binding CloseSettingsCommand}"/>
+                   </StackPanel>
+
+                    
+
+                </StackPanel>
+                
+
+                
+            </Border>
+
+            </Grid> 
+         
+            
+
+    </Border>
+
+    </Grid>
+    
+
+    
+
+</Window>
