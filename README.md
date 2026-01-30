@@ -1,5 +1,5 @@
 # StormEdit
--A Lua script editor for Stormworks: Build and Rescue
+A Lua script editor for Stormworks: Build and Rescue
 
 
 # What is this?
@@ -15,10 +15,14 @@ Using an external code editor carries many other benefits to customisation and e
 
 # What is this built with?
 
-StormEdit's GUI is built with AvaloniaUI with it's MVVM (Model-View-Viewmodel) design pattern.
+StormEdit's GUI is built with C# and AvaloniaUI with it's MVVM (Model-View-Viewmodel) design pattern.
 
 The built in code editor is AvalonEdit with the TextMate Lua syntax highlighting.
 
 The rest of the logic is C#.
 
 I hate installing things, so I made those stack choices to allow this to be built as a standalone executable.
+
+The Lua minifier is a slightly adapted version of this amazing CLI tool:
+https://github.com/stravant/lua-minify
+
