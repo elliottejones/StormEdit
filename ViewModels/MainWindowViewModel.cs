@@ -1,10 +1,18 @@
-﻿using AvaloniaEdit.Document;
+﻿using Avalonia.Controls;
+using Avalonia.Platform.Storage;
+using AvaloniaEdit.Document;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NLua;
+using StormEdit.Views;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Tmds.DBus.Protocol;
 
 namespace StormEdit.ViewModels
 {
@@ -12,6 +20,9 @@ namespace StormEdit.ViewModels
     {
         public MainWindowViewModel()
         {
+            AddTestCreation();
+            AddTestCreation();
+
             // manually refresh ui when script is edited or minified
             _script.TextChanged += (s, e) => {
                 OnPropertyChanged(nameof(EditorScriptLength));
@@ -21,8 +32,13 @@ namespace StormEdit.ViewModels
                 OnPropertyChanged(nameof(MinifiedScriptLength));
                 OnPropertyChanged(nameof(MinifiedScriptString));
             };
-
         }
+
+        // SERVICES AND HELPERS
+
+        private LinkService _linkService = new LinkService();
+
+        // SCRIPT LENGTH AND CONTENT BINDINGS
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(EditorScriptString))]
@@ -38,6 +54,10 @@ namespace StormEdit.ViewModels
         private TextDocument _minifiedScript = new();
         public string MinifiedScriptString => MinifiedScript.Text;
         public int MinifiedScriptLength => MinifiedScript.Text.Length;
+        [ObservableProperty]
+        private bool _isMinifyOpen = false;
+
+        // SETTINGS BINDINGS
 
         [ObservableProperty]
         private bool _isSettingsOpen = false;
@@ -46,8 +66,92 @@ namespace StormEdit.ViewModels
         private int _fontSize = 16;
 
         [ObservableProperty]
-        private bool _isMinifyOpen = false;
+        private string _gamePath = "";
+        private bool gamePathValid = false;
 
+        // DIALOGUE BINDINGS
+
+        [ObservableProperty]
+        private bool _isDialogueOpen = false;
+        [ObservableProperty]
+        private string _dialogueMessage = "";
+        [ObservableProperty]
+        private string _dialogueTitle = "";
+        [ObservableProperty]
+        private bool _isExitDialogue = false;
+
+        [RelayCommand]
+        private void IncorrectGamePath()
+        {
+            DialogueMessage = "Incorrect Stormworks game file - please check path and try again.";
+            DialogueTitle = "❌ Error";
+            IsDialogueOpen = true;
+            IsExitDialogue = false;
+        }
+
+        [RelayCommand]
+        private void CloseDialogue()
+        {
+            IsDialogueOpen = false;
+        }
+
+        // EXPLORER BINDINGS
+        [ObservableProperty]
+        private bool _includeScriptlessCreations = true;
+
+        [RelayCommand]
+        private void RefreshExplorer()
+        {
+            List<Creation>? entries = _linkService.GetExplorerTree(_gamePath, IncludeScriptlessCreations);
+
+            if (entries == null)
+            {
+                IncorrectGamePath();
+                return;
+            }
+
+            ExplorerEntries.Clear();
+
+            foreach (Creation creation in entries)
+            {
+                ExplorerEntries.Add(creation);
+            }
+        }
+
+        [RelayCommand]
+        public async Task OpenGameFolder(Object? root)
+        {
+            var topLevel = TopLevel.GetTopLevel(root as Control);
+
+            var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            {
+                Title = "Open Stormworks Folder",
+                AllowMultiple = false
+            });
+
+            if (folder.Count == 0)
+                return;
+
+            IStorageFolder gameFolder = folder[0];
+            GamePath = gameFolder.Path.ToString().Substring(8);
+        }
+
+        public ObservableCollection<Creation> ExplorerEntries { get; set; } = new();
+
+        public void AddCreation(Creation creation)
+        {
+            ExplorerEntries.Add(creation);
+        }
+
+        public void AddTestCreation()
+        {
+            Creation test = new("Test Creation");
+            test.Scripts.Add(new LuaScript(424,"Test Script 1"));
+            test.Scripts.Add(new LuaScript(425,"Test Script 2"));
+            AddCreation(test);
+        }
+
+        
         [RelayCommand]
         private void Minify()
         {

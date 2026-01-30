@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
         x:Class="StormEdit.Views.MainWindow"
+        x:Name="root"
         x:DataType="vm:MainWindowViewModel"
+        xmlns:local="using:StormEdit"
         Icon="/Assets/avalonia-logo.ico"
         Title="StormEdit"
         xmlns:ae="clr-namespace:AvaloniaEdit;assembly=Avalonia.AvaloniaEdit"
@@ -55,8 +57,37 @@
                 
                 <Border Grid.Column="0" Background="#252526" BorderBrush="#3e3e3e" BorderThickness="0,0,1,0">
                     <DockPanel>
-                        <TextBlock DockPanel.Dock="Top" Text="EXPLORER" Foreground="#bbbbbb" FontSize="11" FontWeight="Bold" Margin="10,10,0,5"/>
-                        <ListBox Background="Transparent" BorderThickness="0"/>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="Transparent" Height="30">
+                        
+                        <TextBlock Text="EXPLORER" Foreground="#bbbbbb" FontSize="11" FontWeight="Bold" Margin="10,10,0,5"/>
+                        <Button Content="Refresh" 
+                                Command="{Binding RefreshExplorerCommand}"
+                                Background="#3e3e3e" Foreground="White" FontSize="12"
+                                Margin="5,3,5,0" Padding="6,0"
+                                VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                                HorizontalAlignment="Right"
+                                BorderThickness="0"/>
+                            </StackPanel>
+                        <TreeView ItemsSource="{Binding ExplorerEntries}" 
+          Background="Transparent" 
+          BorderThickness="0">
+    <TreeView.DataTemplates>
+        
+        <TreeDataTemplate DataType="{x:Type local:Creation}" 
+                          ItemsSource="{Binding Scripts}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="#eeeeee"/>
+            </StackPanel>
+        </TreeDataTemplate>
+
+        <DataTemplate DataType="{x:Type local:LuaScript}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="#9cdcfe"/>
+            </StackPanel>
+        </DataTemplate>
+
+    </TreeView.DataTemplates>
+</TreeView>
                     </DockPanel>
                 </Border>
 
@@ -72,7 +103,7 @@
                 Margin="10,-10,10,0" IsSnapToTickEnabled="True" 
                 VerticalAlignment="Center" Value="{Binding FontSize}"/>
 
-        <Button Content="⚡ Minify" 
+        <Button Content="Minify" 
                 Command="{Binding MinifyCommand}"
                 Background="#3e3e3e" Foreground="White" FontSize="12"
                 Margin="10,3" Padding="10,0"
@@ -148,12 +179,30 @@
                 <Border Grid.Column="1" Background="#2d2d2d" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <StackPanel Spacing="2">
                         <TextBlock Text="Settings" Foreground="White" HorizontalAlignment="Center" Margin="20" FontWeight="SemiBold" FontSize="32"/>
-                        <Grid ColumnDefinitions="Auto, *">
+                        <Grid ColumnDefinitions="Auto, *, Auto">
                             <TextBlock Grid.Column="0" Text="Stormworks Saves Path:" Margin ="15,0" Foreground="White" VerticalAlignment="Center"/>
-                            <TextBox Grid.Column="1" Watermark="Enter Path" Margin="15, 0" HorizontalAlignment="Stretch" />
+                            <TextBox Grid.Column="1" Watermark="Enter Path" Margin="15, 0" Text ="{Binding GamePath}" HorizontalAlignment="Stretch" />
+                            <Button Grid.Column="2" Content="Browse" Margin="0, 0, 15, 0" Command="{Binding OpenGameFolderCommand}" CommandParameter ="{Binding ElementName=root}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto, Auto">
+							<TextBlock Grid.Column="0" Text = "Include Scriptless Creations In Explorer:" Margin="15,0" VerticalAlignment ="Center" />
+                            <CheckBox Grid.Column="1" IsChecked="{Binding IncludeScriptlessCreations}" Margin="10,0"/>
                         </Grid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <Button Content="Save And Exit" HorizontalAlignment="Right" Margin="15, 15" Command="{Binding CloseSettingsCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+        <Border Background="#80000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding IsDialogueOpen}">
+            <Grid ColumnDefinitions="2*, 3*, 2*">
+                <Border Grid.Column="1" Background="#2d2d2d" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="{Binding DialogueTitle}" Foreground="White" HorizontalAlignment="Center" Margin="20" FontWeight="SemiBold" FontSize="32"/>
+                        <TextBlock Text="{Binding DialogueMessage}" Foreground="White" HorizontalAlignment="Center" Margin="20" FontSize="16" TextWrapping="Wrap"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="OK" HorizontalAlignment="Right" Margin="15, 15" Command="{Binding CloseDialogueCommand}"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
